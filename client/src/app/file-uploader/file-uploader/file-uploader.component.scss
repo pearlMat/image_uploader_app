@@ -1,0 +1,111 @@
+.constraints-info {
+  margin-top: 10px;
+  font-style: italic;
+}
+.padMarg {
+  padding: 0px;
+  margin-bottom: 0px;
+}
+.caption {
+  margin-right: 5px;
+}
+.textOverflow {
+  white-space: nowrap;
+  padding-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.up_btn {
+  color: black;
+  background-color: transparent;
+  border: 2px solid rgb(92, 91, 91);
+  border-radius: 22px;
+}
+.delFileIcon {
+  text-decoration: none;
+  color: #ce0909;
+}
+/*--------------------- DRAG N DROP ----------------------*/
+.dragNDrop .div1 {
+  display: border-box;
+ // border: 2px dashed rgb(92, 91, 91);
+ border: 1px dashed #fff1d6;
+  height: 11.5rem;
+  width: 20rem;
+  background: #fff8eb;
+  border-radius: 12px;
+  text-align: center;
+}
+.dragNDrop .div1 > p {
+  text-align: center;
+  font-weight: bold;
+  color: rgb(92, 91, 91);
+  margin-top: 1em;
+}
+.dragNDrop .div1 >img{
+       
+        height: 200px;
+        width: 200px;
+      
+}
+
+.dragNDropBtmPad {
+  padding-bottom: 1rem;
+}
+/* .afu-upload-status {
+  padding: 0;
+  margin: 0;
+} */
+ .center {
+ 
+   
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+   
+     .afu-select-btn, .afu-upload-btn {
+      display: block;
+      width: 140px;
+      height: 40px;
+      background: #22b4bf;
+      color: #fff;
+      border-radius: 12px;
+      border: 0 !important;
+       padding: 5px;
+       text-align: center;
+      transition: all 0.3s ease-in-out;
+      font-size: 18px;
+      font-weight: normal;
+    }
+    .allowed-files{
+      color: #22b4bf;
+    }
+  }
+
+  .progress-bar{
+    width: 100%!important;
+  }
+   
+/*--------------------- X-X-X-X ----------------------*/
+@media screen and (max-width: 620px) {
+  .caption {
+    padding: 0;
+  }
+}
+@media screen and (max-width: 510px) {
+  .sizeC {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 260px) {
+  .sizeC {
+    font-size: 10px;
+  }
+  .caption {
+    font-size: 10px;
+  }
+}
+.resetBtn {
+  margin-left: 3px;
+}

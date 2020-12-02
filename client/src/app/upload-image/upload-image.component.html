@@ -4,16 +4,18 @@
 	<div class="center">
 		<div class="title">
       <h1>Upload your Image</h1>
-       <p>File should be Jpeg, Png,...</p>
+       <p>File should be Jpeg, Jpg, Png,...</p>
 		</div>
-    
-		<div class="image-box">
-  
-        <img src="assets/images/image2.png" />
-			<input type="file" class="upload-input" /> 
-		</div>
+<!---	<div class="image-box" >
 
-		<button type="button" class="btn" name="uploadbutton">Upload</button>
+        <img src="assets/images/image2.png" />
+			<input type="file" class="upload-input"  />
+    </div>-->
+     <app-file-uploader [config]="afuConfig" [resetUpload]=resetUpload3 (ApiResponse)="docUpload($event)">
+       
+    </app-file-uploader>
+
+	<!----	<button type="button" class="btn" name="uploadbutton">Upload</button>-->
 
 	</div>
 </div>
