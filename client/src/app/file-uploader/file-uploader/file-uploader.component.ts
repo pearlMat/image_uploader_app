@@ -18,6 +18,7 @@ import {
   HttpClient,
   HttpHeaders,
   HttpParams,
+  HttpRequest,
   HttpEventType,
 } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -25,13 +26,12 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-file-uploader',
   templateUrl: './file-uploader.component.html',
-  styleUrls: ['./file-uploader.component.scss']
+  styleUrls: ['./file-uploader.component.scss'],
 })
-export class FileUploaderComponent implements  OnChanges {
+export class FileUploaderComponent implements OnChanges {
+  showupload: boolean;
 
-width: 200;
-
- // Inputs
+  // Inputs
   @Input()
   config: FileUploaderConfig;
 
@@ -83,6 +83,8 @@ width: 200;
 
   constructor(@SkipSelf() private http: HttpClient) {}
 
+  ngOnInit() {}
+
   ngOnChanges(changes: SimpleChanges) {
     // Track changes in Configuration and see if user has even provided Configuration.
     if (changes.config && this.config) {
@@ -95,6 +97,7 @@ width: 200;
       this.hideProgressBar = this.config.hideProgressBar || false;
       this.hideResetBtn = this.config.hideResetBtn || false;
       this.hideSelectBtn = this.config.hideSelectBtn || false;
+      // this.hideSelectBtn =true;
       this.maxSize = (this.config.maxSize || 20) * 1024000; // mb to bytes.
       this.uploadAPI = this.config.uploadAPI.url;
       this.method = this.config.uploadAPI.method || 'POST';
@@ -130,7 +133,6 @@ width: 200;
         this.resetFileUpload();
       }
     }
-
   }
 
   // Reset following properties.
@@ -144,7 +146,6 @@ width: 200;
 
   // When user selects files.
   onChange(event: any) {
-
     this.notAllowedFiles = [];
     const fileExtRegExp: RegExp = /(?:\.([^.]+))?$/;
     let fileList: FileList;
@@ -184,6 +185,7 @@ width: 200;
 
     // If there's any allowedFiles.
     if (this.allowedFiles.length > 0) {
+      this.hideSelectBtn = true;
       this.enableUploadBtn = true;
       // Upload the files directly if theme is attach pin (as upload btn is not there for this theme).
       if (this.theme === 'attachPin') {
@@ -199,7 +201,43 @@ width: 200;
     event.target.value = null;
   }
 
+  uploadFile() {
+    this.progressBarShow = true;
+    this.uploadStarted = true;
+    this.notAllowedFiles = [];
+    let isError = false;
+    this.isAllowedFileSingle = this.allowedFiles.length <= 1;
+    const formData = new FormData();
+    // Add data to be sent in this request
+    this.allowedFiles.forEach((file, i) => {
+      formData.append(
+        'file' + (this.fileNameIndex ? i : ''),
+        //   this.Caption[i] || 'file' + (this.fileNameIndex ? i : ''),
+        this.allowedFiles[i]
+      );
+    });
+    this.http
+      .post<any>('http://localhost:3000/uploadimage', formData)
+      .subscribe(
+        (response) => {
+          console.log(response);
+          if (response.statusCode === 200) {
+            // Reset the file input
+            console.log('loaded!');
+          }
+        },
+        (er) => {
+          console.log(er);
+          alert(er.error.error);
+        }
+      );
+  }
+
+  startUpload(file) {}
+
   uploadFiles() {
+    // this.showProgressBar();
+
     this.progressBarShow = true;
     this.uploadStarted = true;
     this.notAllowedFiles = [];
@@ -209,8 +247,10 @@ width: 200;
 
     // Add data to be sent in this request
     this.allowedFiles.forEach((file, i) => {
+      console.log(this.allowedFiles[i], this.fileNameIndex);
       formData.append(
-        this.Caption[i] || 'file' + (this.fileNameIndex ? i : ''),
+        'file' + (this.fileNameIndex ? i : ''),
+        //   this.Caption[i] || 'file' + (this.fileNameIndex ? i : ''),
         this.allowedFiles[i]
       );
     });
@@ -219,7 +259,9 @@ width: 200;
       params: this.params,
     };
 
-    if (this.responseType) { (options as any).responseType = this.responseType; }
+    if (this.responseType) {
+      (options as any).responseType = this.responseType;
+    }
 
     this.http
       .request(this.method.toUpperCase(), this.uploadAPI, {
@@ -238,9 +280,12 @@ width: 200;
           } else if (event.type === HttpEventType.Response) {
             if (event.status === 200 || event.status === 201) {
               // Success
+
               this.progressBarShow = false;
               this.enableUploadBtn = false;
               this.uploadMsg = true;
+              this.showupload = true;
+              this.hideSelectBtn = false;
               this.afterUpload = true;
               if (!isError) {
                 this.uploadMsgText = this.replaceTexts.afterUploadMsg_success;
@@ -267,7 +312,9 @@ width: 200;
   }
 
   handleErrors() {
+    this.hideSelectBtn = false;
     this.progressBarShow = false;
+    this.hideSelectBtn = false;
     this.enableUploadBtn = false;
     this.uploadMsg = true;
     this.afterUpload = true;
@@ -312,5 +359,4 @@ width: 200;
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
   }
-
 }

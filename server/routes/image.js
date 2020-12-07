@@ -1,53 +1,66 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+var fileExtension = require('file-extension');
 const Image = require('../models/image.js');
-
-// Save file to server storage
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
+var storage = multer.diskStorage({
+	// Setting directory on disk to save uploaded files
+	destination: function (req, file, cb) {
+		//	cb(null, 'my_uploaded_files');
 		cb(null, '../public/images');
 	},
-	filename: (req, file, cb) => {
-		console.log(file);
-		let filetype = '';
-		if (file.mimetype === 'image/gif') {
-			filetype = 'gif';
-		}
-		if (file.mimetype === 'image/png') {
-			filetype = 'png';
-		}
-		if (file.mimetype === 'image/jpeg') {
-			filetype = 'jpg';
-		}
-		cb(null, 'image-' + Date.now() + '.' + filetype);
+
+	// Setting name of file saved
+	filename: function (req, file, cb) {
+		cb(null, file.fieldname + '-' + Date.now() + '.' + fileExtension(file.originalname));
 	},
 });
 
-const upload = multer({ storage: storage });
-
-// get data by id
-router.get('/:id', function (req, res, next) {
-	Image.findById(req.params.id, function (err, image) {
-		if (err) return next(err);
-		res.json(image);
-	});
+var upload = multer({
+	storage: storage,
+	limits: {
+		// Setting Image Size Limit to 2MBs
+		fileSize: 2000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			//Error
+			cb(new Error('Please upload JPG and PNG images only!'));
+		}
+		//Success
+		cb(undefined, true);
+	},
 });
+router.post(
+	'/',
+	//upload.single('file'),
+	upload.array('files[]'),
 
-// post data
-router.post('/', upload.single('file'), function (req, res, next) {
-	if (!req.file) {
-		return res.status(500).send({ message: 'Sorry! could not upload file' });
-	} else {
-		req.body.imageUrl = 'http://192.168.0.7:3000/images/' + req.file.filename;
-		Image.create(req.body, function (err, image) {
-			if (err) {
-				console.log(err);
-				return next(err);
-			}
-			res.json(image);
+	(req, res, next) => {
+		const file = req.file;
+		console.log(req);
+		if (!file) {
+			console.log(req);
+			const error = new Error('Please upload a file');
+			error.httpStatusCode = 400;
+			return next(error);
+		}
+		res.status(200).send({
+			statusCode: 200,
+			status: 'success',
+			uploadedFile: file,
+			/*	name: req.file.originalname,
+			type: req.file.mimetype,
+			size: req.file.size,
+			webkitRelativePath: file.webkitRelativePath,
+			lastModifiedDate: file.lastModifiedDate,
+			lastModified: file.lastModified,*/
+		});
+	},
+	(error, req, res, next) => {
+		res.status(400).send({
+			error: error.message,
 		});
 	}
-});
-
+);
 module.exports = router;

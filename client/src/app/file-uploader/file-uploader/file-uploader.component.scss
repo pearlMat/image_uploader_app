@@ -25,6 +25,47 @@
   text-decoration: none;
   color: #ce0909;
 }
+ .center1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 600px;
+    border-radius: 3px;
+    box-shadow: 8px 10px 15px 0 rgba(0, 0, 0, 0.2);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+  
+  }
+    .title {
+     // border-bottom: 1px solid gainsboro;
+
+      font-style: normal;
+      letter-spacing: -0.035em;
+
+      color: #4f4f4f;
+      text-align: center;
+      h1 {
+        font-size: 18px;
+        font-weight: 500;
+
+        line-height: 27px;
+      }
+         p {
+        font-size: 10px;
+
+        font-weight: 300;
+        line-height: 15px;
+      }
+      .uploaded-p{
+          font-size: 18px;
+
+      }
+    }
 /*--------------------- DRAG N DROP ----------------------*/
 .dragNDrop .div1 {
   display: border-box;

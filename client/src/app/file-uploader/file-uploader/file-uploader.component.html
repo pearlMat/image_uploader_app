@@ -1,94 +1,131 @@
-<div class="container" *ngIf="(theme !== 'attachPin')" id="default">
+<div class="container center" *ngIf="showupload">
+  <div class="title">
+    <p *ngIf="uploadMsg" class="{{uploadMsgClass}} + afu-upload-status uploaded-p">
+      {{uploadMsgText}}
+    </p>
+    <p></p>
 
-  <!-- Drag n Drop theme Starts -->
-  <div *ngIf="theme =='dragNDrop'" id="dragNDrop"
-    [ngClass]="(hideSelectBtn && hideResetBtn) ? null : 'dragNDropBtmPad'" class="dragNDrop">
-    <div >
-      <div id="div1" class="div1 afu-dragndrop-box" (drop)="drop($event)" (dragover)="allowDrop($event)">
-     <!--- <p class="afu-dragndrop-text">{{replaceTexts?.dragNDropBox}}</p>-->
-         <img src="assets/images/image2.png" class="afu-dragndrop-img" />
-      </div>
-      <!-- <span class='label label-info' id="upload-file-info{{id}}">{{allowedFiles[0]?.name}}</span> -->
-    </div>
   </div>
-  <!-- Drag n Drop theme Ends -->
-  <div class="center">
-  <label for="sel{{id}}"  class="afu-select-btn"
+  <label for="sel{{id}}" class="afu-select-btn" *ngIf="!hideSelectBtn">
+    {{replaceTexts?.selectFileBtn}}
+  </label>
+  <input type="file" id="sel{{id}}" style="display: none" *ngIf="!hideSelectBtn" (change)="onChange($event)"
+    title="Select file" name="files[]" [accept]=formatsAllowed [attr.multiple]="multiple ? '' : null">
+</div>
+<div *ngIf="!showupload">
+  <div class="container" *ngIf="(theme !== 'attachPin')" id="default">
+    <div class="title">
+      <h1>Upload your Image</h1>
+      <p>File should be Jpeg, Jpg, Png,...</p>
+    </div>
+
+    <!-- Drag n Drop theme Starts -->
+    <div *ngIf="theme =='dragNDrop'" id="dragNDrop"
+      [ngClass]="(hideSelectBtn && hideResetBtn) ? null : 'dragNDropBtmPad'" class="dragNDrop">
+      <div>
+        <div id="div1" class="div1 afu-dragndrop-box" (drop)="drop($event)" (dragover)="allowDrop($event)">
+          <!-- - <p class="afu-dragndrop-text">{{replaceTexts?.dragNDropBox}}</p> -->
+          <img src="assets/images/image2.png" class="afu-dragndrop-img">
+        </div>
+        <!-- <span class='label label-info' id="upload-file-info{{id}}">{{allowedFiles[0]?.name}}</span> -->
+      </div>
+    </div>
+    <!-- Drag n Drop theme Ends -->
+    <div class="center">
+      <!-- - <label for="sel{{id}}"  class="afu-select-btn"
     *ngIf="!hideSelectBtn">{{replaceTexts?.selectFileBtn}}</label>
   <input type="file" id="sel{{id}}" style="display: none" *ngIf="!hideSelectBtn" (change)="onChange($event)"
-    title="Select file" name="files[]" [accept]=formatsAllowed [attr.multiple]="multiple ? '' : null" />
-  <button class="btn btn-info btn-sm resetBtn afu-reset-btn" (click)="resetFileUpload()"
-    *ngIf="!hideResetBtn">{{replaceTexts?.resetBtn}}</button>
-  <br *ngIf="!hideSelectBtn">
-  <p class="constraints-info afu-constraints-info"> {{replaceTexts?.sizeLimit}}: {{(convertSize(maxSize))}}
-  </p>
-  <!--Allowed file list-->
-  <div class="row afu-valid-file" *ngFor="let sf of allowedFiles;let i=index">
-    <p class="col-xs-6 textOverflow mr-2"><span class="allowed-files">{{sf.name}}</span></p>
-    <p class="col-xs-6 padMarg ml-2 sizeC"><strong>({{convertSize(sf.size)}})</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-    <!--  <input class="col-xs-3 progress caption"  type="text"  placeholder="Caption.."  [(ngModel)]="Caption[i]"  *ngIf="!uploadStarted"/> -->
-   
-  </div>
-  <!-- progress bar -->
-  <div class="row">
-     <div class="progress col-xs-12 padMarg afu-progress-bar" *ngIf="isAllowedFileSingle && progressBarShow && !hideProgressBar">
-      <div class="progress-bar progress-bar-success" role="progressbar"
-        [ngStyle]="{'width':width+ uploadPercent+'%'}">{{uploadPercent}}%</div>
-    </div>-
-   <!---   <ngb-progressbar class="col-xs-12" [showValue]="true" type="info"  *ngIf="isAllowedFileSingle && progressBarShow && !hideProgressBar">
-         <div class="progress-bar progress-bar-success" role="progressbar"
-        [ngStyle]="{'width':uploadPercent+'%'}">{{uploadPercent}}%</div>
-      </ngb-progressbar>-->
-    
-  
-    
-    <a class="col-xs-1" role="button" (click)="removeFile(i,'sf')" *ngIf="!uploadStarted"><i class="fa fa-times"></i></a>
+    title="Select file" name="files[]" [accept]=formatsAllowed [attr.multiple]="multiple ? '' : null" /> -->
+      <button class="btn btn-info btn-sm resetBtn afu-reset-btn" (click)="resetFileUpload()" *ngIf="!hideResetBtn">
+        {{replaceTexts?.resetBtn}}
+      </button>
+      <br *ngIf="!hideSelectBtn">
+      <p class="constraints-info afu-constraints-info">
+        {{replaceTexts?.sizeLimit}}: {{(convertSize(maxSize))}}
+      </p>
+      <!-- Allowed file list -->
+      <div class="row afu-valid-file" *ngFor="let sf of allowedFiles;let i=index">
+        <p class="col-xs-6 textOverflow mr-2">
+          <span class="allowed-files">{{sf.name}}</span>
+        </p>
+        <p class="col-xs-6 padMarg ml-2 sizeC">
+          <strong>({{convertSize(sf.size)}})</strong>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
 
-  </div>
+      </div>
+      <!-- progress bar -->
+      <div class="row">
+        <div class="progress col-lg-12 padMarg afu-progress-bar"
+          *ngIf="isAllowedFileSingle && progressBarShow && !hideProgressBar">
+          <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{'width': uploadPercent+'%'}">
+            {{uploadPercent}}%
+          </div>
+        </div>
 
- 
+        <a class="col-xs-6" role="button" (click)="removeFile(i,'sf')" *ngIf="!uploadStarted">
+          <i class="fa fa-times"></i>
+        </a>
 
-     
+      </div>
 
-     
+      <!-- Not Allowed file list -->
+      <div class="row text-danger afu-invalid-file center" *ngFor="let na of notAllowedFiles;let j=index">
+        <p class="col-xs-3 textOverflow">
+          <span>{{na['fileName']}}</span>
+        </p>
+        <p class="col-xs-3 padMarg sizeC">
+          <strong>({{na['fileSize']}})</strong>
+        </p>
+        <p class="col-xs-3 ">{{na['errorMsg']}}</p>
+        <a class="col-xs-1 delFileIcon" role="button" (click)="removeFile(j,'na')" *ngIf="!uploadStarted">
+          &nbsp;
+          <i class="fa fa-times"></i>
+        </a>
+      </div>
 
-  
-  <!--Not Allowed file list-->
-  <div class="row text-danger afu-invalid-file" *ngFor="let na of notAllowedFiles;let j=index">
-    <p class="col-xs-3 textOverflow"><span>{{na['fileName']}}</span></p>
-    <p class="col-xs-3 padMarg sizeC"><strong>({{na['fileSize']}})</strong></p>
-    <p class="col-xs-3 ">{{na['errorMsg']}}</p>
-    <a class="col-xs-1 delFileIcon" role="button" (click)="removeFile(j,'na')" *ngIf="!uploadStarted">&nbsp;<i
-        class="fa fa-times"></i></a>
-  </div>
-
-  <p *ngIf="uploadMsg" class="{{uploadMsgClass}} + afu-upload-status">{{uploadMsgText}}<p>
+      <!-- <p *ngIf="uploadMsg" class="{{uploadMsgClass}} + afu-upload-status">{{uploadMsgText}}<p> -->
       <div *ngIf="!isAllowedFileSingle && progressBarShow && !hideProgressBar">
         <div class="progress col-xs-4 padMarg afu-progress-bar">
-          <span class="progress-bar progress-bar-success" role="progressbar"
-            [ngStyle]="{'width':uploadPercent+'%'}">{{uploadPercent}}%</span>
+          <span class="progress-bar progress-bar-success" role="progressbar" [ngStyle]="{'width':uploadPercent+'%'}">
+            {{uploadPercent}}%
+          </span>
         </div>
         <br>
         <br>
       </div>
-      <button class=" afu-upload-btn" type="button" (click)="uploadFiles()"
-        [disabled]=!enableUploadBtn>{{replaceTexts?.uploadBtn}}</button>
+      <label for="sel{{id}}" class="afu-select-btn" *ngIf="!hideSelectBtn">
+        {{replaceTexts?.selectFileBtn}}
+      </label>
+      <form method="post" enctype="multipart/form-data">
+        <input class="mb-4" type="file" id="sel{{id}}" style="display: none" *ngIf="!hideSelectBtn"
+          (change)="onChange($event)" title="Select file" name="files[]" [accept]=formatsAllowed
+          [attr.multiple]="multiple ? '' : null">
+      </form>
+      <button *ngIf="hideSelectBtn" class="mt-4 afu-upload-btn" type="button" (click)="uploadFile()"
+        [disabled]=!enableUploadBtn>
+        {{replaceTexts?.uploadBtn}}
+      </button>
       <br>
-</div>
-</div>
 
-<!--/////////////////////////// ATTACH PIN THEME  //////////////////////////////////////////////////////////-->
-<div *ngIf="theme == 'attachPin'" id="attachPin">
-  <div style="position:relative;padding-left:6px">
-    <a class='btn up_btn afu-attach-pin' (click)="attachpinOnclick()">
-      {{replaceTexts?.attachPinBtn}}
-      <i class="fa fa-paperclip" aria-hidden="true"></i>
-      <!-- <p style="margin-top:10px">({{formatsAllowed}}) Size limit- {{(convertSize(maxSize))}}</p> -->
-      <input type="file" id="sel{{id}}" (change)="onChange($event)" style="display: none" title="Select file"
-        name="files[]" [accept]=formatsAllowed [attr.multiple]="multiple ? '' : null" />
-      <br>
-    </a>
-    &nbsp;
-    <span class='label label-info' id="upload-file-info{{id}}">{{allowedFiles[0]?.name}}</span>
+    </div>
+  </div>
+
+  <!-- /////////////////////////// ATTACH PIN THEME  ////////////////////////////////////////////////////////// -->
+  <div *ngIf="theme == 'attachPin'" id="attachPin">
+    <div style="position:relative;padding-left:6px">
+      <a class='btn up_btn afu-attach-pin' (click)="attachpinOnclick()">
+        {{replaceTexts?.attachPinBtn}}
+        <i class="fa fa-paperclip" aria-hidden="true"></i>
+        <!-- <p style="margin-top:10px">({{formatsAllowed}}) Size limit- {{(convertSize(maxSize))}}</p> -->
+        <input type="file" id="sel{{id}}" (change)="onChange($event)" style="display: none" title="Select file"
+          name="files[]" [accept]=formatsAllowed [attr.multiple]="multiple ? '' : null">
+        <br>
+      </a>
+      &nbsp;
+      <span class='label label-info' id="upload-file-info{{id}}">
+        {{allowedFiles[0]?.name}}
+      </span>
+    </div>
   </div>
 </div>

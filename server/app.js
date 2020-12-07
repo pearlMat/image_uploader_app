@@ -3,7 +3,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-require('./../config/config');
+//require('./../config/config');
+const fs = require('fs');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const imagesRouter = require('./routes/image');
@@ -18,5 +19,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/images', imagesRouter);
+app.use('/uploadimage', imagesRouter);
+
 module.exports = app;
